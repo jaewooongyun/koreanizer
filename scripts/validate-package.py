@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check Humanizer's package files without external dependencies."""
+"""Check Koreanizer's package files without external dependencies."""
 
 from __future__ import annotations
 
@@ -30,6 +30,15 @@ yaml_metadata = require_match(
 for unsupported_field in ("compatibility:", "allowed-tools:"):
     if re.search(rf"(?m)^{re.escape(unsupported_field)}", yaml_metadata):
         raise SystemExit(f"Remove unsupported YAML field: {unsupported_field[:-1]}")
+
+skill_name = require_match(
+    re.search(r"(?m)^name:\s*([a-z0-9-]+)\s*$", yaml_metadata),
+    "Add a lowercase name to SKILL.md",
+).group(1)
+if skill_name != "koreanizer":
+    raise SystemExit("Set SKILL.md name to koreanizer")
+if PLUGIN.get("name") != "koreanizer":
+    raise SystemExit("Set plugin.json name to koreanizer")
 
 skill_version = require_match(
     re.search(r'(?m)^\s+version:\s*["\']([^"\']+)["\']\s*$', yaml_metadata),
@@ -69,6 +78,9 @@ if missing_plain_language_rules:
         + ", ".join(missing_plain_language_rules)
     )
 
+if "fiction mode" not in SKILL.lower() and "소설 모드" not in SKILL:
+    raise SystemExit("Keep a fiction mode section in SKILL.md")
+
 pattern_numbers = [
     int(number)
     for number in re.findall(r"(?m)^### ([0-9]+)\. ", SKILL)
@@ -85,4 +97,4 @@ if readme_numbers != set(range(1, 36)):
 if len(SKILL.splitlines()) > 500:
     raise SystemExit("Keep SKILL.md at 500 lines or fewer")
 
-print(f"Humanizer package v{skill_version} is valid")
+print(f"Koreanizer package v{skill_version} is valid")

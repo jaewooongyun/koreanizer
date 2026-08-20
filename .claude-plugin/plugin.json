@@ -1,15 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "humanizer",
-  "description": "Rewrite AI-sounding text so it reads naturally without changing what it says.",
-  "version": "2.11.2",
+  "name": "koreanizer",
+  "description": "Rewrite AI-sounding Korean so it reads naturally without changing what it says.",
+  "version": "1.0.0",
   "author": {
-    "name": "blader",
-    "url": "https://github.com/blader"
+    "name": "sangeuiseo",
+    "url": "https://github.com/sangeuiseo"
   },
-  "homepage": "https://github.com/blader/humanizer",
-  "repository": "https://github.com/blader/humanizer",
+  "homepage": "https://github.com/sangeuiseo/koreanizer",
+  "repository": "https://github.com/sangeuiseo/koreanizer",
   "license": "MIT",
-  "keywords": ["writing", "editing", "ai-detection", "humanize", "prose", "style"],
+  "keywords": ["writing", "editing", "korean", "translationese", "humanize", "prose", "style"],
   "skills": ["./"]
 }

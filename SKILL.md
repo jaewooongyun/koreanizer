@@ -1,456 +1,458 @@
 ---
-name: humanizer
+name: koreanizer
 description: |
-  Rewrite AI-sounding text so it reads naturally without changing what it says.
-  Use when editing or reviewing prose for inflated claims,
-  sales language, vague sources, repetitive structure, stock AI words, passive
-  voice, filler, or chatbot artifacts. Based on Wikipedia's "Signs of AI writing."
+  Rewrite AI-sounding Korean so it reads like a person wrote it, without
+  changing what it says. Use when editing or reviewing Korean prose for
+  translationese, sales language, vague sources, uniform sentence endings,
+  chatbot leftovers, or other LLM tells. Triggers include 윤문, 번역투,
+  AI 티, 자연스러운 한국어, humanize, koreanize.
 license: MIT
 metadata:
-  version: "2.11.2"
+  version: "1.0.0"
 ---
 
-# Humanizer: remove AI writing patterns
+# Koreanizer: AI 한국어 문장을 사람 글로 고친다
 
-Rewrite AI-sounding text so it reads like the writer, not a chatbot. Do not change what it says or make up details.
+AI처럼 읽히는 한국어를 필자 글로 다시 쓴다. 뜻은 바꾸지 않고, 없는 사실을 보태지 않는다.
 
-The patterns below come from Wikipedia's ["Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup.
+언어와 무관한 챗봇·서식 버릇은 Wikipedia의 [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)을 따른다. 한국어 문법 버릇은 번역투 연구, 국립국어원 공공·신문 문장 지침, 한국어 LLM 관찰(KatFishNet, LREAD)을 따른다.
 
-## What to do
+## 할 일
 
-When given text to humanize:
+텍스트를 고치라는 요청을 받으면:
 
-1. **Find AI patterns.** Check the text against the patterns below.
-2. **Keep every claim.** You may shorten dull parts, expand useful parts, and merge or split paragraphs. Keep the information even when you change the structure.
-3. **Do not invent facts.** Do not add a fact, name, number, date, quote, or citation unless it comes from the source or the user. If a sentence needs a missing detail, ask for it or use a simpler sentence. You may add an opinion or reaction when the writer's voice calls for one, but you may not add a factual claim. Fiction is exempt because invented details are part of the task.
-4. **Match the voice.** Use the right tone for the text, such as formal, casual, or technical. Add personality only when the text and the writer call for it.
+1. **AI 패턴을 찾는다.** 아래 목록과 대조한다.
+2. **주장은 모두 남긴다.** 지루한 부분은 줄이고, 쓸모 있는 부분은 늘리며, 문단을 합치거나 쪼개도 된다. 정보는 유지한다.
+3. **사실을 만들지 않는다.** 원문이나 사용자가 주지 않은 사실, 이름, 숫자, 날짜, 인용, 출처를 넣지 않는다. 빠진 내용이 필요하면 묻거나 더 단순한 문장으로 쓴다. 필자 목소리가 요구할 때만 의견이나 반응을 보탤 수 있다. 소설은 허구가 일이므로 이 규칙에서 뺀다.
+4. **목소리를 맞춘다.** 격식, 해요체, 합니다체, 반말 가운데 글에 맞는 것을 쓴다. 성격은 글과 필자가 요구할 때만 넣는다.
 
-The input type controls what you return. See [How to return the result](#how-to-return-the-result). Use the same rewrite process in every mode.
+입력 종류가 반환 형식을 정한다. [결과 내는 법](#결과-내는-법)을 본다. 다시 쓰기 과정은 모든 모드에서 같다.
 
-## Match the writer's voice
+## 필자 목소리
 
-If the user provides a writing sample (their own previous writing), analyze it before rewriting:
+사용자가 자신의 글을 샘플로 주면, 고치기 전에 먼저 읽는다.
 
-1. Read the sample first. Note its sentence length, word choice, paragraph openings, punctuation, repeated phrases, and transitions.
-2. Match those habits. Do not replace casual words with formal ones or remove deliberate quirks.
-3. If there is no sample, use the guidance below.
+1. 문장 길이, 단어, 문단 시작, 문장부호, 되풀이되는 말, 종결어미, 해요체/합니다체 전환을 적는다.
+2. 그 습관을 따른다. 편한 말을 격식으로 바꾸거나, 고의로 남긴 버릇을 지우지 않는다.
+3. 샘플이 없으면 아래 규칙을 쓴다.
 
-A writing sample takes priority over these style rules. If the sample uses em dashes, keep them at about the same rate. Do not apply §14 as a ban.
+샘플이 이 스킬의 문체 규칙보다 앞선다. 샘플이 줄표나 `그녀`를 쓰면, 비슷한 빈도로 남긴다. 14절과 13절을 전면 금지로 쓰지 않는다.
 
-## Add personality only when it fits
+## 성격은 맞을 때만
 
-Removing AI patterns is only half the job. The result should still sound like a person.
+AI 패턴을 지우는 것만으로는 부족하다. 결과는 사람이 쓴 글처럼 들려야 한다.
 
-Use personality in blog posts, essays, opinions, and personal writing when it fits the writer. Keep reference, technical, legal, and factual text neutral. Do not add opinions or first-person language where they do not belong.
+블로그, 에세이, 의견문, 사적인 글에서는 필자에 맞게 성격을 넣는다. 기술, 법령, 레퍼런스, 사실 전달은 담담하게 둔다. 거기 의견이나 1인칭을 끼워 넣지 않는다.
 
-When personality fits, keep the writer's opinions, uncertainty, mixed feelings, humor, asides, and uneven rhythm. Never invent facts to make the text feel personal.
+성격이 맞으면 의견, 망설임, 엇갈린 감정, 농담, 곁가지, 고르지 않은 호흡을 남긴다. 성격을 만들려고 사실을 보태지 않는다.
 
-## Content patterns
+## 내용 패턴
 
-### 1. Inflated claims about importance and legacy
+### 1. 중요성과 유산을 부풀리기
 
-**Words to watch:** stands/serves as, is a testament/reminder, a vital/significant/crucial/pivotal/key role/moment, underscores/highlights its importance/significance, reflects broader, symbolizing its ongoing/enduring/lasting, contributing to the, setting the stage for, marking/shaping the, represents/marks a shift, key turning point, evolving landscape, focal point, indelible mark, deeply rooted
-**Problem:** AI writing often claims that ordinary details mark a major change, prove a legacy, or reflect a broad trend.
-**Before:**
-> The Statistical Institute of Catalonia was officially established in 1989, marking a pivotal moment in the evolution of regional statistics in Spain. This initiative was part of a broader movement across Spain to decentralize administrative functions and enhance regional governance.
-**After:**
-> The Statistical Institute of Catalonia was established in 1989, part of a wider decentralization of administrative functions in Spain.
+**감시 어휘:** 이정표, 핵심적인, 중요한 한 걸음, 기반을 다지, 새로운 지평, 패러다임, 상징한다, 더 넓은 흐름을 반영
+**문제:** 평범한 사실을 큰 전환이나 유산처럼 부풀린다.
+**전:**
+> 통계연구소는 1989년 공식 출범하며 지역 통계의 이정표를 세웠다. 이는 행정 분권이라는 더 넓은 흐름을 반영한다.
+**후:**
+> 통계연구소는 1989년에 문을 열었다. 당시 행정 분권의 한 부분이었다.
 
-### 2. Name-dropping to prove importance
+### 2. 유명 매체를 나열해 중요함을 증명하기
 
-**Words to watch:** independent coverage, local/regional/national media outlets, written by a leading expert, active social media presence
-**Problem:** AI writing often lists well-known publications or follower counts to prove that a person matters. The list usually gives no useful context.
-**Before:**
-> Her views have been cited in The New York Times, BBC, Financial Times, and The Hindu. She maintains an active social media presence with over 500,000 followers.
-**After:**
-> Her views have been cited in The New York Times and the BBC.
+**감시 어휘:** 독립 보도, 주요 언론, 권위 있는 전문가, 활발한 SNS
+**문제:** 매체 이름과 팔로워 수를 나열하고 맥락은 빼먹는다.
+**전:**
+> 그의 견해는 조선일보, BBC, 한겨레, 파이낸셜 타임스에 인용되었다. SNS 팔로워는 50만이 넘는다.
+**후:**
+> 그의 견해는 조선일보와 BBC에 인용되었다.
 
-If the source explains what the person said and where, keep that useful citation. Do not invent context for a shorter version.
+원문이 한 인용에 대해 무엇을, 어디서 말했는지 설명하면 그 인용만 남긴다. 짧은 버전을 위해 맥락을 만들지 않는다.
 
-### 3. Shallow analysis with -ing phrases
+### 3. 번역체 연결로 얕은 분석을 붙이기
 
-**Words to watch:** highlighting/underscoring/emphasizing..., ensuring..., reflecting/symbolizing..., contributing to..., cultivating/fostering..., encompassing..., showcasing...
-**Problem:** AI writing often adds an -ing phrase to make a simple fact sound deeper than it is.
-**Before:**
-> The temple's color palette of blue, green, and gold resonates with the region's natural beauty, symbolizing Texas bluebonnets, the Gulf of Mexico, and the diverse Texan landscapes, reflecting the community's deep connection to the land.
-**After:**
-> The temple is painted blue, green, and gold, colors meant to evoke Texas bluebonnets and the Gulf of Mexico.
+**감시 어휘:** ~하며, ~하면서, ~하는 가운데, ~함으로써, 보여 주며, 시사하며
+**문제:** 영어 -ing 절을 옮긴 듯 단순 사실 뒤에 분석 절을 붙인다.
+**전:**
+> 사찰은 파랑, 초록, 금색으로 칠해져 있으며, 지역의 자연을 상징하고 공동체의 유대를 보여 준다.
+**후:**
+> 사찰은 파랑, 초록, 금색이다. 꽃과 바다를 떠올리게 하려는 색이다.
 
-### 4. Sales language
+### 4. 광고 문장
 
-**Words to watch:** boasts a, vibrant, rich (figurative), profound, enhancing its, showcasing, exemplifies, commitment to, natural beauty, nestled, in the heart of, groundbreaking (figurative), renowned, breathtaking, must-visit, stunning
-**Problem:** AI writing often sounds like an advertisement, especially when it describes places, culture, products, or organizations.
-**Before:**
-> Nestled within the breathtaking region of Gonder in Ethiopia, Alamata Raya Kobo stands as a vibrant town with a rich cultural heritage and stunning natural beauty.
-**After:**
-> Alamata Raya Kobo is a town in the Gonder region of Ethiopia.
+**감시 어휘:** 원활한, 고도화, 혁신적인, 풍부한 유산, 빼어난, 자리 잡은, 심장부에, 필수 코스
+**문제:** 장소, 문화, 제품, 조직을 광고처럼 쓴다.
+**전:**
+> 수려한 자연 한가운데 자리 잡은 이 마을은 풍부한 문화유산과 혁신적인 관광 인프라를 자랑한다.
+**후:**
+> 이 마을은 산골에 있고, 오래된 집과 새로 난 산책로가 있다.
 
-### 5. Vague sources
+### 5. 막연한 출처
 
-**Words to watch:** Industry reports, Observers have cited, Experts argue, Some critics argue, several sources/publications (when few cited)
-**Problem:** AI writing often assigns a claim to unnamed experts, critics, reports, or observers.
-**Before:**
-> Due to its unique characteristics, the Haolai River is of interest to researchers and conservationists. Experts believe it plays a crucial role in the regional ecosystem.
-**After:**
-> Researchers and conservationists study the Haolai River for its unusual characteristics.
+**감시 어휘:** 업계 보고서, 전문가들은, 일부 비판은, 여러 소식통, 관찰자들은
+**문제:** 이름 없는 전문가나 보고서에 주장을 맡긴다.
+**전:**
+> 전문가들은 이 강이 지역 생태계에서 핵심적인 역할을 한다고 본다.
+**후:**
+> 연구자와 보전 단체는 이 강의 특이한 지형을 조사한다.
 
-Name a real source when the source text provides one. Otherwise, remove the unsupported claim. Never invent a source.
+원문이 준 출처만 이름을 밝힌다. 없으면 근거 없는 주장을 뺀다. 출처를 만들지 않는다.
 
-### 6. Formulaic challenges and outlook sections
+### 6. 도전과 전망 공식 단락
 
-**Words to watch:** Despite its... faces several challenges..., Despite these challenges, Challenges and Legacy, Future Outlook
-**Problem:** AI articles often add a stock section about challenges, future prospects, or continued growth. These sections usually repeat vague claims instead of adding facts.
-**Before:**
-> Despite its industrial prosperity, Korattur faces challenges typical of urban areas, including traffic congestion and water scarcity. Despite these challenges, with its strategic location and ongoing initiatives, Korattur continues to thrive as an integral part of Chennai's growth.
-**After:**
-> Korattur has recurring traffic congestion and water shortages.
+**감시 어휘:** 이러한 도전에도, 향후 전망, 지속적인 성장, 계속 도약
+**문제:** 사실 없이 난관과 희망을 한 세트로 붙인다.
+**전:**
+> 교통 체증과 물 부족이라는 도시 문제에도, 이 지역은 지속적인 성장을 이어 가며 도약하고 있다.
+**후:**
+> 이 지역은 교통 체증과 물 부족이 반복된다.
 
-Add details such as dates or public actions only when they come from the source or the user.
+날짜나 공공 조치는 원문이나 사용자가 줄 때만 넣는다.
 
-## Language and grammar patterns
+## 언어와 문법 패턴
 
-### 7. Overused AI words
+### 7. 과잉 AI 어휘
 
-**High-frequency AI words:** Actually, additionally, align with, crucial, delve, emphasizing, enduring, enhance, fostering, garner, gate/gated/gating (figurative; preserve established technical usage), highlight (verb), interplay, intricate/intricacies, key (adjective), landscape (abstract noun), pivotal, quietly, showcase, tapestry (abstract noun), testament, underscore (verb), valuable, vibrant
-**Problem:** AI writing uses these words much more often than most people do, especially in groups.
-**Before:**
-> Additionally, a distinctive feature of Somali cuisine is the incorporation of camel meat. An enduring testament to Italian colonial influence is the widespread adoption of pasta in the local culinary landscape, showcasing how these dishes have integrated into the traditional diet.
-**After:**
-> Somali cuisine also includes camel meat, which is considered a delicacy. Pasta dishes, introduced during Italian colonization, remain common, especially in the south.
-
-### 8. Avoiding is and are
-
-**Words to watch:** serves as/stands as/marks/represents [a], boasts/features/offers [a]
-**Problem:** AI writing often replaces simple verbs such as *is*, *are*, and *has* with longer phrases.
-**Before:**
-> Gallery 825 serves as LAAA's exhibition space for contemporary art. The gallery features four separate spaces and boasts over 3,000 square feet.
-**After:**
-> Gallery 825 is LAAA's exhibition space for contemporary art. The gallery has four rooms totaling 3,000 square feet.
-
-### 9. Not X but Y and clipped negative endings
-**Problem:** AI writing overuses forms such as "Not only...but..." and "It's not just X, it's Y."
-
-It also adds clipped endings such as "no guessing" instead of writing a clear clause.
-**Before:**
-> It's not just about the beat riding under the vocals; it's part of the aggression and atmosphere. It's not merely a song, it's a statement.
-**After:**
-> The heavy beat adds to the aggressive tone.
-**Before (tailing negation):**
-> The options come from the selected item, no guessing.
-**After:**
-> The options come from the selected item without forcing the user to guess.
-
-### 10. Forced groups of three
-**Problem:** AI writing often forces ideas into groups of three to sound complete.
-**Before:**
-> The event features keynote sessions, panel discussions, and networking opportunities. Attendees can expect innovation, inspiration, and industry insights.
-**After:**
-> The event includes talks and panels. There's also time for informal networking between sessions.
-
-### 11. Changing names and repeating sentence openings
-**Problem:** AI writing handles repetition by rule instead of by ear. It may keep renaming the same person or thing. It may also start several sentences with the same subject, often *she* or *he*.
-
-Use one clear name for the same subject. For repeated openings, merge sentences, change the subject when that helps, or begin with the action.
-**Before (synonym cycling):**
-> The protagonist faces many challenges. The main character must overcome obstacles. The central figure eventually triumphs. The hero returns home.
-**After:**
-> The protagonist faces many challenges but eventually triumphs and returns home.
-**Before (repeated openings):**
-> She noted the door. She noted the lock on it. She filed both away.
-**After:**
-> She noted the door and its lock, then filed both away.
-
-Do not ban the repeated word. Fix the repeated sentence pattern. The remaining sentence may still start with "She."
-
-### 12. False from X to Y ranges
-**Problem:** AI writing often uses "from X to Y" when X and Y do not form a real range.
-**Before:**
-> Our journey through the universe has taken us from the singularity of the Big Bang to the grand cosmic web, from the birth and death of stars to the enigmatic dance of dark matter.
-**After:**
-> The book covers the Big Bang, star formation, and current theories about dark matter.
-
-### 13. Passive voice and missing subjects
-**Problem:** AI writing often hides who acts or drops the subject. Use active voice when it makes the actor and action clearer.
-**Before:**
-> No configuration file needed. The results are preserved automatically.
-**After:**
-> You do not need a configuration file. The system preserves the results automatically.
-
-## Style patterns
-
-### 14. Em and en dashes
-
-**Rule:** The final rewrite must not contain em dashes (—) or en dashes (–), unless the writer's sample uses them. Replace a dash with a period, comma, colon, or parentheses, or rewrite the sentence. Also check for spaced dashes (` — `) and double hyphens (` -- `) used as dashes.
-**Before:**
-> The term is primarily promoted by Dutch institutions—not by the people themselves. You don't say "Netherlands, Europe" as an address—yet this mislabeling continues—even in official documents.
-**After:**
-> The term is primarily promoted by Dutch institutions, not by the people themselves. You don't say "Netherlands, Europe" as an address, yet this mislabeling continues in official documents.
-**Before:**
-> The new policy — announced without warning — affects thousands of workers. The changes -- long overdue according to critics -- will take effect immediately.
-**After:**
-> The new policy, announced without warning, affects thousands of workers. The changes, long overdue according to critics, will take effect immediately.
-
-Before returning the rewrite, search for `—` and `–`. Remove each one unless the writer's sample uses that mark. In that case, match the sample's rate.
-
-### 15. Too much bold text
-**Problem:** AI chatbots often bold words and phrases without a clear reason.
-**Before:**
-> It blends **OKRs (Objectives and Key Results)**, **KPIs (Key Performance Indicators)**, and visual strategy tools such as the **Business Model Canvas (BMC)** and **Balanced Scorecard (BSC)**.
-**After:**
-> It blends OKRs, KPIs, and visual strategy tools like the Business Model Canvas and Balanced Scorecard.
-
-### 16. Lists with bold mini-headings
-**Problem:** AI writing often uses vertical lists in which every item starts with a bold label and a colon.
-**Before:**
-> - **User Experience:** The user experience has been significantly improved with a new interface.
-> - **Performance:** Performance has been enhanced through optimized algorithms.
-> - **Security:** Security has been strengthened with end-to-end encryption.
-**After:**
-> The update improves the interface, speeds up load times through optimized algorithms, and adds end-to-end encryption.
-
-### 17. Title case in headings
-**Problem:** AI chatbots often capitalize every main word in a heading.
-**Before:**
-> ## Strategic Negotiations And Global Partnerships
-**After:**
-> ## Strategic negotiations and global partnerships
-
-### 18. Emojis
-**Problem:** AI chatbots often add emojis to headings and list items as decoration.
-**Before:**
-> 🚀 **Launch Phase:** The product launches in Q3
-> 💡 **Key Insight:** Users prefer simplicity
-> ✅ **Next Steps:** Schedule follow-up meeting
-**After:**
-> The product launches in Q3. User research showed a preference for simplicity. Next step: schedule a follow-up meeting.
-
-### 19. Curly quotation marks
-**Problem:** ChatGPT often uses curly quotes (“...”) where the writer or target format uses straight quotes ("...").
-**Before:**
-> He said “the project is on track” but others disagreed.
-**After:**
-> He said "the project is on track" but others disagreed.
-
-## Chatbot patterns
-
-### 20. Chatbot text left in the answer
-
-**Words to watch:** I hope this helps, Of course!, Certainly!, You're absolutely right!, Would you like..., Want me to...?, Want me to give examples?, Should I continue?, let me know, here is a...
-**Problem:** A chatbot's greeting, offer, or closing sometimes remains in text that should stand on its own.
-**Before:**
-> Here is an overview of the French Revolution. I hope this helps! Let me know if you'd like me to expand on any section.
-**After:**
-> The French Revolution began in 1789 when financial crisis and food shortages led to widespread unrest.
-
-### 21. Knowledge-limit disclaimers and guesses
-
-**Words to watch:** as of [date], Up to my last training update, While specific details are limited/scarce..., based on available information, not publicly available, maintains a low profile, keeps personal details private, prefers to stay out of the spotlight, likely [grew up/studied/began], it is believed that
-**Problem:** Older models may mention the date when their knowledge ends. A model may also explain that it could not find a source, then fill the gap with a plausible guess. State what the source does not show, or remove the sentence. Do not present a guess as a fact.
-**Before (cutoff disclaimer):**
-> While specific details about the company's founding are not extensively documented in readily available sources, it appears to have been established sometime in the 1990s.
-**After:**
-> The company's founding date is not documented in the available sources. (Or cut the sentence. State a date only if a source provides one.)
-**Before (speculative gap-fill):**
-> Information about her early life is not publicly available, suggesting she maintains a low profile and keeps personal details private. She likely grew up in a middle-class household, which shaped her later interest in education reform.
-**After:**
-> Her early life is not documented in the available sources. (Or omit the section.)
-
-### 22. Overly agreeable tone
-**Problem:** AI assistants often praise the user or agree before giving the answer.
-**Before:**
-> Great question! You're absolutely right that this is a complex topic. That's an excellent point about the economic factors.
-**After:**
-> The economic factors you mentioned are relevant here.
-
-## Filler and hedging
-
-### 23. Filler phrases
-
-**Before → After:**
-- "In order to achieve this goal" → "To achieve this"
-- "Due to the fact that it was raining" → "Because it was raining"
-- "At this point in time" → "Now"
-- "In the event that you need help" → "If you need help"
-- "The system has the ability to process" → "The system can process"
-- "It is important to note that the data shows" → "The data shows"
-
-### 24. Too many qualifiers
-
-**Phrases to watch:** to be fair, it's also possible, could potentially, might arguably, in some cases it may, this is an inference
-**Problem:** Repeated editing can add one qualifier after another until every claim sounds uncertain. Keep a qualifier only when the source supports it and the meaning needs it. Remove caveats that only repair an earlier overstatement.
-**Before:**
-> It could potentially possibly be argued that the policy might have some effect on outcomes.
-**After:**
-> The policy may affect outcomes.
-
-### 25. Generic positive endings
-**Problem:** AI writing often ends with vague optimism instead of the last useful fact.
-**Before:**
-> The future looks bright for the company. Exciting times lie ahead as they continue their journey toward excellence. This represents a major step in the right direction.
-**After:**
-> (Cut the paragraph. End on the last concrete fact instead of a send-off. If the source states real plans, use those.)
-
-### 26. Too many hyphenated word pairs
-
-**Words to watch:** third-party, cross-functional, client-facing, data-driven, decision-making, well-known, high-quality, real-time, long-term, end-to-end
-**Problem:** AI writing often hyphenates these pairs everywhere. Keep the hyphen before a noun when grammar needs it, as in `a high-quality report`. Drop it after the noun, as in `the report is high quality`.
-**Before:**
-> The cross-functional team delivered a high-quality, data-driven report. The team is cross-functional, the report is high-quality, and the methodology is data-driven.
-**After:**
-> The cross-functional team delivered a high-quality, data-driven report. The team is cross functional, the report is high quality, and the methodology is data driven.
-
-### 27. Pretending to reveal a deeper truth
-
-**Phrases to watch:** The real question is, at its core, in reality, what really matters, fundamentally, the deeper issue, the heart of the matter
-**Problem:** AI writing uses these phrases to make an ordinary point sound like a hidden truth.
-**Before:**
-> The real question is whether teams can adapt. At its core, what really matters is organizational readiness.
-**After:**
-> The question is whether teams can adapt. That mostly depends on whether the organization is ready to change its habits.
-
-### 28. Announcing the next point
-
-**Phrases to watch:** Let's dive in, let's explore, let's break this down, here's what you need to know, now let's look at, without further ado, heads up, quick note, before I forget
-**Problem:** AI writing often announces the next point instead of stating it. A casual phrase such as "one thing that bit me" can have the same problem. Remove the announcement, not just its formal tone.
-**Before:**
-> Let's dive into how caching works in Next.js. Here's what you need to know.
-**After:**
-> Next.js caches data at multiple layers, including request memoization, the data cache, and the router cache.
-**Before (casual register):**
-> One thing that bit me hard, so pay attention to this part: the webpack dev server doesn't send the CORS header by default.
-**After:**
-> The webpack dev server doesn't send the CORS header by default.
-
-### 29. A heading repeated in the first sentence
-
-**Signs to watch:** A heading followed by a one-line paragraph that simply restates the heading before the real content begins.
-**Problem:** AI writing often follows a heading with a sentence that only repeats the heading. Remove the repeated sentence.
-**Before:**
-> ## Performance
+**자주 나오는 말:** 종합적으로, 다양한 측면에서, 주목할 만하다, 시사하는 바가 크다, 혁신적인, 핵심적인, 본질적으로, 다각도로, 체계적으로, 효과적으로, 더욱이, 나아가
+**문제:** 사람이 잘 안 쓰는 말을 뭉쳐 쓴다.
+**전:**
+> 종합적으로 볼 때 이 결과는 다양한 측면에서 시사하는 바가 크다.
+**후:**
+> 이 결과는 비용과 일정 둘 다에 영향을 준다.
+
+### 8. 이다/있다를 피하는 말
+
+**감시 어휘:** 자리매김한다, 역할을 수행한다, 기능을 하다, 가지고 있다, 보여 준다
+**문제:** 짧은 서술어 대신 영어 have/serve as 직역을 쓴다.
+**전:**
+> 이 공간은 전시실의 역할을 수행하며 3천 제곱미터를 가지고 있다.
+**후:**
+> 이 공간은 전시실이다. 넓이는 3천 제곱미터다.
+
+### 9. 단순한 X가 아니라 Y, 잘린 부정
+
+**문제:** "X가 아니라 Y다", "단지 X가 아니라"를 남용한다. "추측 없이"처럼 절을 잘라 붙이기도 한다.
+**전:**
+> 단순한 도구가 아니라 팀의 언어다. 옵션은 선택한 항목에서 온다, 추측 없이.
+**후:**
+> 팀은 이 도구로 용어를 맞춘다. 옵션은 선택한 항목에서 오므로 사용자가 짐작할 필요가 없다.
+
+### 10. 억지 셋
+
+**문제:** 뜻을 셋으로 맞춰 완전해 보이게 한다.
+**전:**
+> 혁신, 영감, 산업 통찰을 제공한다.
+**후:**
+> 발표와 패널이 있고, 세션 사이에 이야기할 시간이 있다.
+
+### 11. 이름을 바꿔 쓰기, 문두와 종결 반복
+
+**문제:** 같은 대상을 동의어로 순환한다. 문장을 같은 주어나 같은 종결어미로 잇는다. 한국어에서 주어를 빼는 것은 정상이다. 빠진 주어를 채워 넣지 않는다.
+**전 (순환):**
+> 주인공은 시련을 겪는다. 중심인물은 장애를 넘는다. 영웅은 집으로 돌아온다.
+**후:**
+> 주인공은 시련을 겪고 집으로 돌아온다.
+**전 (종결):**
+> 설정이 필요합니다. 결과가 저장됩니다. 로그가 남습니다.
+**후:**
+> 설정이 필요하고, 결과는 자동으로 저장된다. 로그도 남는다.
+
+고의로 같은 호흡을 쌓은 문장은 그대로 둔다.
+
+### 12. 가짜 X부터 Y까지
+
+**문제:** 실제 범위가 아닌 둘을 "부터/까지", "에서 ~에 이르기까지"로 잇는다.
+**전:**
+> 빅뱅에서 암흑물질에 이르기까지 우주를 다룬다.
+**후:**
+> 빅뱅, 별의 형성, 암흑물질 가설을 다룬다.
+
+### 13. 번역투 피동
+
+**감시 어휘:** 되어지다, 보여지다, 에 의해, 이루어지다, 요구된다
+**문제:** 영어·일본어 피동을 옮겨 행위자가 흐려진다. 주어 없는 한국어 문장은 이 패턴이 아니다.
+**전:**
+> 매뉴얼은 운영팀에 의해 작성되어지며, 내부 조율이 이루어졌다.
+**후:**
+> 운영팀이 매뉴얼을 썼고, 내부에서 조율했다.
+
+## 문체 패턴
+
+### 14. 줄표와 연결어미 뒤 쉼표
+
+**규칙:** 최종본에 em dash(—), en dash(–)를 두지 않는다. 샘플이 쓰면 그 빈도에 맞춘다. ` — `, ` -- `도 같다. 한국어 LLM은 연결어미 뒤 쉼표를 영어처럼 자주 찍는다. `며,` `고,` `는데,` 뒤 쉼표가 뜻에 필요 없으면 뺀다.
+**전:**
+> 이 용어는 기관이 밀고 있다—주민들은 안 쓴다. 정리하며, 다음으로 넘어간다.
+**후:**
+> 이 용어는 기관이 밀고, 주민들은 안 쓴다. 정리하고 다음으로 넘어간다.
+
+돌려주기 전에 `—`와 `–`를 찾는다.
+
+### 15. 과잉 볼드
+
+**문제:** 이유 없이 단어에 굵은 글씨를 단다.
+**전:**
+> **OKR**, **KPI**, **비즈니스 모델 캔버스**를 섞는다.
+**후:**
+> OKR, KPI, 비즈니스 모델 캔버스를 섞는다.
+
+### 16. 볼드 소제목 목록
+
+**문제:** 모든 항목이 **표지:** 본문 형식이다.
+**전:**
+> - **성능:** 성능이 크게 개선되었다.
+> - **보안:** 보안이 강화되었다.
+**후:**
+> 인터페이스가 짧아졌고, 끝에서 끝까지 암호화를 넣었다.
+
+### 17. 명사형 제목과 영문 Title Case
+
+**문제:** 한국어 제목을 명사로만 끝낸다. 영문 제목은 모든 단어를 대문자로 쓴다. 한국어에는 Title Case가 없다.
+**전:**
+> ## 핵심 성과 및 향후 계획
+> ## Strategic Negotiations And Partnerships
+**후:**
+> ## 지금까지의 성과와 다음에 할 일
+> ## Strategic negotiations and partnerships
+
+### 18. 장식 이모지
+
+**문제:** 제목과 목록에 이모지를 장식으로 붙인다.
+**전:**
+> 🚀 출시: 3분기다. 💡 핵심: 단순함이 우선이다.
+**후:**
+> 3분기에 출시한다. 사용자 조사에서 단순한 화면이 더 나았다.
+
+### 19. 따옴표 남용
+
+**문제:** 평범한 단어를 따옴표로 띄운다. 한국어 본문에 영어 굽은 따옴표(“ ”)가 섞인다. 「」와 『』는 한국어 인용에서 정상이다. 그것만 보고 고치지 않는다.
+**전:**
+> 그는 “애자일”한 “여정”을 말했지만 반대가 있었다.
+**후:**
+> 그는 짧은 반복으로 일하자고 했지만 반대가 있었다.
+
+## 챗봇 패턴
+
+### 20. 답에 남은 챗봇 문구
+
+**감시 어휘:** 도움이 되셨으면, 더 필요하시면, 물론이죠, 언제든지 말씀해, 원하시면, 정리하면 다음과 같습니다
+**문제:** 인사, 제안, 맺음말이 혼자 서야 할 글에 남는다.
+**전:**
+> 프랑스 혁명을 정리하면 다음과 같습니다. 도움이 되셨으면 합니다!
+**후:**
+> 프랑스 혁명은 1789년, 재정 위기와 식량 부족이 겹치며 시작되었다.
+
+### 21. 지식 한계 면책과 추측
+
+**감시 어휘:** 학습 시점 기준으로, 공개된 자료가 제한적, 알려진 바가 많지 않아, ~했을 것으로 보인다, ~로 추정된다
+**문제:** 모르는 부분을 추측으로 메운다. 원문이 보여 주지 않은 것은 그렇게 말하거나 문장을 뺀다.
+**전:**
+> 창업 시점은 자료가 제한적이지만 1990년대에 설립된 것으로 보인다.
+**후:**
+> 창업 날짜는 주어진 자료에 없다.
+
+### 22. 과잉 동의
+
+**문제:** 답하기 전에 사용자를 칭찬하거나 맞장구친다.
+**전:**
+> 좋은 질문입니다! 완전히 맞는 지적입니다.
+**후:**
+> 말씀하신 비용 문제가 여기 해당한다.
+
+## 군더더기와 완곡
+
+### 23. 번역투 구
+
+**전 → 후:**
+- "정책에 대하여 검토한다" → "정책을 검토한다"
+- "설문을 통해 찾는다" → "설문을 보고 찾는다"
+- "개편에 있어서 우선순위는" → "개편에서 우선순위는"
+- "개인정보와 관련하여" → "개인정보는"
+- "목표를 달성하기 위해" → "목표를 이루려고"
+- "처리를 할 수 있는 능력을 가지고 있다" → "처리할 수 있다"
+
+### 24. 수식어 중첩
+
+**감시 어휘:** 어느 정도는, 가능성이 있어 보이며, 부분적으로는, 추론하자면
+**문제:** 확실하지 않다는 말을 겹쳐 모든 주장을 흐린다. 원문이 뒷받침하고 뜻이 필요할 때만 남긴다.
+**전:**
+> 정책이 결과에 어느 정도 영향을 미칠 가능성이 있어 보인다.
+**후:**
+> 정책이 결과에 영향을 줄 수 있다.
+
+### 25. 막연한 낙관 결말
+
+**문제:** 마지막 유용한 사실 대신 응원으로 끝낸다.
+**전:**
+> 앞으로의 행보가 기대된다. 더 나은 내일을 향해 나아가고 있다.
+**후:**
+> (뺀다. 마지막 구체적 사실에서 끝낸다. 원문에 실제 계획이 있으면 그것을 쓴다.)
+
+### 26. 한자어 명사화와 영어 차용어
+
+**감시 어휘:** -적, -성, -화, 데이터 드리븐, 엔드투엔드, 크로스 펑셔널, 의사결정
+**문제:** 한자 접미사와 영어 합성어를 밀도 높게 붙인다. 학술·법령에서 자리 잡은 용어는 남긴다.
+**전:**
+> 데이터 드리븐 의사결정을 통해 조직 문화의 고도화를 추진한다.
+**후:**
+> 숫자로 보고 결정을 내린다. 회의 방식도 그에 맞춘다.
+
+### 27. 가짜 심층
+
+**감시 어휘:** 진짜 질문은, 본질적으로, 핵심은, 더 깊은 문제는
+**문제:** 평범한 점을 숨은 진실처럼 올린다.
+**전:**
+> 본질적으로 핵심은 조직이 준비되었는지다.
+**후:**
+> 팀이 적응할 수 있는지는, 조직이 습관을 바꿀 준비가 되었는지에 달렸다.
+
+### 28. 다음 내용을 예고하기
+
+**감시 어휘:** 자 이제, 하나씩 살펴보면, 먼저 알아둘 점은, 본격적으로
+**문제:** 내용을 말하기 전에 예고한다. 편한 투의 "여기서 주의"도 같다.
+**전:**
+> 자, 이제 캐시가 어떻게 도는지 살펴보자.
+**후:**
+> Next.js는 요청 메모이제이션, 데이터 캐시, 라우터 캐시 여러 층에서 데이터를 담는다.
+
+### 29. 제목을 첫 문장에서 반복하기
+
+**문제:** 제목 다음 한 줄이 제목만 다시 말한다.
+**전:**
+> ## 성능
 >
-> Speed matters.
+> 속도는 중요하다.
 >
-> When users hit a slow page, they leave.
-**After:**
-> ## Performance
+> 느린 페이지에서 사용자는 떠난다.
+**후:**
+> ## 성능
 >
-> When users hit a slow page, they leave.
+> 느린 페이지에서 사용자는 떠난다.
 
-### 30. Writing about the previous version
-**Problem:** Documentation and comments should describe the current behavior. Mention the previous version only in change logs, release notes, migration guides, and other documents about change.
-**Before:**
-> This function was added to replace the previous approach of iterating through all items, which caused O(n²) performance.
-**After:**
-> This function uses a hash map for O(1) lookups, avoiding the O(n²) cost of naive iteration.
+### 30. 이전 버전을 설명하기
 
-### 31. Forced punchlines and dramatic fragments
-**Problem:** AI writing often turns each sentence into a dramatic closing line. One short sentence can add emphasis. A row of short fragments usually feels forced.
-**Before:**
-> Then AlphaEvolve arrived. It had no preference for symmetry. No aesthetic prior. No nostalgia for human taste. The old rules were gone.
-**After:**
-> AlphaEvolve changed the search because it did not favor symmetry or human-looking designs. That made some of the older assumptions less useful.
+**문제:** 문서와 주석은 지금 동작을 말한다. 이전 이야기는 변경 로그, 릴리스 노트, 이전 안내서에만 둔다.
+**전:**
+> 이 함수는 모든 항목을 순회하던 이전 방식을 대체하기 위해 추가되었다.
+**후:**
+> 이 함수는 해시맵으로 O(1)에 찾는다.
 
-### 32. Formulaic sayings
+### 31. 억지 짧은 문장
 
-**Words to watch:** X is the Y of Z, X becomes a trap, X is not a tool but a mirror, the language of, the currency of, the architecture of
-**Problem:** AI writing often turns an ordinary claim into a saying that sounds deep but adds no detail. Replace the saying with the specific claim.
-**Before:**
-> Symmetry is the language of trust. Efficiency becomes a trap when teams forget the human layer.
-**After:**
-> Symmetric layouts often feel more predictable to users. Teams can over-optimize workflows and miss how people actually use them.
+**문제:** 매 문장을 극적인 한 줄로 끊는다. 짧은 문장 하나는 강조가 된다. 여러 개가 이어지면 작위적이다.
+**전:**
+> 그때 도구가 왔다. 대칭을 선호하지 않았다. 미감도 없었다. 옛 규칙은 끝났다.
+**후:**
+> 그 도구는 대칭이나 사람 눈에 익은 형태를 가리지 않았다. 그래서 예전 가정이 덜 쓸모있어졌다.
 
-### 33. Fake-candid openings
+### 32. 공식 격언
 
-**Phrases to watch:** Honestly?, Look, Here's the thing, The thing is, Let's be honest, Real talk, when used as standalone hooks or fake-candid pauses before an ordinary point.
-**Problem:** AI writing often starts with a staged pause or claim of honesty before making a routine point. State the point directly.
-**Before:**
-> Is it worth the price? Honestly? It depends on how often you'll use it.
-**After:**
-> Whether it's worth the price depends on how often you'll use it.
+**감시 어휘:** X는 Y의 언어다, X는 함정이 된다, 도구가 아니라 거울
+**문제:** 구체적 주장 대신 깊은 척하는 한 줄을 둔다.
+**전:**
+> 대칭은 신뢰의 언어다. 효율은 사람을 잊을 때 함정이 된다.
+**후:**
+> 좌우가 맞는 배치는 예측하기 쉽다. 절차만 줄이다 보면 실제 사용을 놓친다.
 
-### 34. Answering objections no one raised
+### 33. 가짜 솔직 도입
 
-**Phrases to watch:** This isn't (mainly/really) about, I'm not saying/arguing/trying to, To be clear, Don't get me wrong, This is not to say, You could argue/frame this differently but, Some might say... but
-**Problem:** AI writing may answer an objection that does not appear in the text. Watch for an unattributed statement about what the writer does not mean, especially when the topic appears nowhere else. A direct claim such as "the API is not thread-safe" is not this pattern.
-**Before:**
-> This isn't mainly about prompt length, and I'm not arguing that documentation doesn't matter. You could categorize the problem another way, but the issue is whether the agent can use the instruction when it acts.
-**After:**
-> The issue is whether the agent can use the instruction when it acts.
+**감시 어휘:** 솔직히?, 봐봐요, 사실은 말이지, 까놓고
+**문제:** 평범한 점 앞에 연출된 정직을 둔다. 문장 한가운데 "솔직히"는 일상어라 이 패턴이 아니다.
+**전:**
+> 값어치가 있을까? 솔직히? 얼마나 쓰느냐에 달렸다.
+**후:**
+> 값어치는 얼마나 자주 쓰느냐에 달렸다.
 
-Remove only the unsupported defense. If it contains a real claim, state that claim directly. Keep an objection when the text names its source or answers it in full.
+### 34. 없는 반론에 답하기
 
-### 35. Rejecting fake alternatives
+**감시 어휘:** 오해하지 마세요, 저는 ~하려는 게 아닙니다, 다르게 볼 수도 있지만
+**문제:** 글에 없는 반론을 먼저 막는다. "이 API는 스레드 안전하지 않다"처럼 직접 부정은 이 패턴이 아니다.
+**전:**
+> 오해하지 마세요, 문서가 중요치 않다는 말이 아닙니다. 문제는 지시가 실행 순간에 쓰이는지다.
+**후:**
+> 문제는 지시가 실행 순간에 쓰이는지다.
 
-**Phrases to watch:** A tempting option/approach would be, One might be tempted to, An obvious approach would be, You might think... but, It would be easy to just, Some would suggest
-**Problem:** AI writing may introduce an option that no reader would consider, reject it in a clause, and never mention it again. This often leaves an old drafting idea in the final text. Remove the fake option and state the real constraint directly.
-**Before:**
-> Session tokens are rotated every 24 hours. A tempting approach would be to rotate them by restarting the auth service on a cron job, but that would drop every active session. Rotation happens in place, and clients refresh transparently.
-**After:**
-> Session tokens are rotated every 24 hours, in place, and clients refresh transparently.
+근거 없는 방어만 뺀다. 안에 실제 주장이 있으면 그 주장만 바로 쓴다.
 
-One rejected option may be valid. Several short, unrelated rejections are a stronger sign. Ask what new information each sentence adds. If it only records an earlier edit, rewrite the paragraph around its main point.
+### 35. 가짜 대안을 기각하기
 
-## Check for false positives
+**감시 어휘:** 유혹적인 방법은, ~하고 싶지만, 쉬운 방법은, 어떤 이들은
+**문제:** 독자가 고르지 않을 안을 꺼냈다가 바로 버린다. 초안 잔재인 경우가 많다.
+**전:**
+> 토큰은 24시간마다 바뀐다. 인증 서비스를 재시작해 돌리고 싶지만 그러면 세션이 끊긴다. 제자리에서 바뀌고 클라이언트는 조용히 갱신한다.
+**후:**
+> 토큰은 24시간마다 제자리에서 바뀌고, 클라이언트는 조용히 갱신한다.
 
-### What not to flag
+거절한 안이 하나면 남을 수 있다. 짧고 서로 무관한 거절이 여러 개면 더 강한 신호다.
 
-A person may use some of these patterns. Do not treat any item below as proof by itself:
+## 오탐을 가린다
 
-- **Perfect grammar and consistent style.** Many writers are professionals or have been edited. Polish does not equal AI.
-- **Mixed casual and formal styles.** This can reflect the writer's field, age, or personal habits.
-- **"Bland" or "robotic" prose.** AI prose has *specific* tells. Generic dryness without those tells is just dry writing.
-- **Formal or academic words.** §7 lists specific words that AI writing overuses. Do not simplify every formal word.
-- **Letter-style opening or closing on a comment.** Salutations and sign-offs predate ChatGPT by centuries.
-- **Common transition words in isolation.** *Additionally*, *moreover*, *consequently* are AI-coded only when piled up. One *however* is not a tell.
-- **Curly quotes alone.** macOS, Word, Google Docs, and most CMSes auto-curl by default. Curly quotes only count when stacked with other tells.
-- **Em dashes alone.** Many editors and journalists use them often. Em dashes are evidence only when paired with formulaic sales-y rhythm.
-- **One short sentence for emphasis.** Flag dramatic fragments only when several appear in a row.
-- **Deliberate repeated openings.** Writers may repeat an opening to build rhythm or pressure, as in "She came. She saw. She conquered." Change it only when the repetition adds nothing.
-- **"Honestly" or "look" mid-sentence.** These are ordinary in casual writing. The tell is the standalone theatrical opener, not the word itself.
-- **Useful limits and disclaimers.** Keep scope statements, legal and safety notices, real corrections, named objections, replies, and FAQ answers.
-- **Real alternatives.** Keep options that a reader may consider in a design document, tutorial, or argument. Remove only an unlikely option that the text dismisses and never uses again.
-- **Unsourced claims.** Most of the web is unsourced. Lack of citations doesn't prove anything.
-- **Correct, complex formatting.** Visual editors and templates produce clean output without any AI.
-- **Secondhand text.** Do not rewrite watched phrases inside quotations, titles, proper names, or examples where the phrase is being discussed rather than used.
+아래만 보고 AI라고 단정하지 않는다.
 
-When unsure, look for several patterns together. One em dash proves nothing. Several stock patterns in the same passage are stronger evidence.
+- **깨끗한 맞춤법.** 다듬어진 글은 직업 글이기도 하다.
+- **해요체와 합니다체가 섞임.** 장르, 나이, 습관일 수 있다.
+- **건조한 문장.** AI 티는 구체적인 버릇이다. 건조함만으로는 부족하다.
+- **한자어·전문어.** 26절은 밀도다. 학술 용어를 쉬운 말로 바꾸지 않는다.
+- **편지 인사와 맺음.** 챗GPT보다 오래되었다.
+- **접속어 하나.** "그러나" 하나는 신호가 아니다. 문두 접속이 겹칠 때다.
+- **「」 『』.** 한국어 인용 부호다. 영어 굽은 따옴표와 구분한다.
+- **줄표 하나.** 기자와 편집자도 쓴다. 광고 리듬과 겹칠 때만 본다.
+- **짧은 강조 문장 하나.** 여러 개가 이어질 때만 31절이다.
+- **고의적 문두 반복.** "왔다. 보았다. 이겼다."는 남긴다.
+- **문장 한가운데의 "솔직히".** 단독 도입만 33절이다.
+- **실제 제한과 면책.** 범위, 법령, 안전, 정정, 이름 있는 반론, FAQ는 남긴다.
+- **실제 대안.** 설계 문서와 튜토리얼의 선택지는 남긴다.
+- **출처 없는 웹 문장.** 출처 없음이 AI를 증명하지 않는다.
+- **인용·제목·고유명 안의 감시 어휘.** 그 말을 논의하는 자리면 고치지 않는다.
+- **빠진 주어.** 한국어의 기본이다. 13절로 채워 넣지 않는다.
+- **소설의 "그녀".** 현대 소설에서 흔하다. 샘플이나 장르가 쓰면 남긴다.
 
-### Human details to keep
+여러 패턴이 한 구절에 겹칠 때 더 강하게 본다.
 
-These details often carry the writer's voice. Keep them unless they hurt the meaning:
+### 남길 사람 냄새
 
-- **Specific, unusual details.** Keep a real address, an odd quote, or a phrase such as "the lawyer who used to work upstairs from my dentist."
-- **Mixed feelings and unresolved tension.** Keep lines such as "I think this is mostly good, but it bothers me, and I can't fully explain why."
-- **Dated, era-bound references.** Slang, memes, or in-jokes that map to a specific year and subculture. Models lag by a year or more.
-- **Deliberate first-person choices.** Keep a cut or word choice when the writer can explain why it belongs.
-- **Variety in sentence length.** Real writing alternates short and long. AI writing tends toward an even, mid-length cadence.
-- **Genuine asides, parentheticals, or self-corrections.** "(I keep wanting to say 'almost' here, but it really was certain.)" Models rarely interrupt themselves like this.
-- **Edits made before November 30, 2022.** ChatGPT's public launch. Anything older than that is, with very rare exceptions, not AI-written.
+뜻만 해치지 않으면 남긴다.
 
----
+- **특이한 구체.** 실제 주소, 이상한 인용, "치과 위층에서 일하던 변호사".
+- **끝나지 않은 감정.** "대체로 좋은데 거슬리고, 이유를 다 말 못 하겠다."
+- **그때만의 말.** 특정 해와 장르에 묶인 유행어. 모델은 한 박자 늦다.
+- **고의적 1인칭 선택.** 필자가 이유를 말할 수 있는 생략이나 단어.
+- **문장 길이의 기복.** 사람 글은 짧고 긴 것이 섞인다. AI는 중간 길이로 고르다.
+- **곁가지와 자기 정정.** "(여기서 '거의'라고 쓰고 싶지만, 확실했다.)"
+- **2022년 11월 30일 이전 수정.** ChatGPT 공개 전 글은 거의 AI가 아니다.
 
-## How to return the result
+## 결과 내는 법
 
-**Pasted text (default).** Return the draft, a short list of remaining AI patterns, and the final rewrite.
+**붙여넣기 (기본).** 초안, 남은 AI 패턴 짧은 목록, 최종본을 돌려준다.
 
-**File mode.** When the user names a file, run the full rewrite process but write only the final text to the file. Change prose only. Keep code blocks, YAML metadata, data, and link targets unchanged. Then give the user a short summary.
+**파일 모드.** 사용자가 파일을 지정하면 같은 과정을 거치되, 파일에는 최종 산문만 쓴다. 산문만 고친다. 코드 블록, YAML, 데이터, 링크 대상은 그대로 둔다. 사용자에게는 짧은 요약을 준다.
 
-**Embedded mode.** When another task uses this skill for a pull request, commit message, or document, return only the final text.
+**내장 모드.** 다른 작업이 이 스킬을 끌어 쓰면, 풀 리퀘스트, 커밋 메시지, 문서에는 최종본만 돌려준다.
 
-## Rewrite process
+## 다시 쓰기 과정
 
-1. Read the source and mark each AI pattern.
-2. Write a draft. Read it aloud. Check the rhythm, details, simple verbs such as *is* and *has*, and the right level of formality.
-3. Ask two questions:
-   - **"What still sounds AI-generated?"**
-   - **"Did the rewrite add or remove any fact, name, number, date, quote, citation, ranking, or other claim?"**
-   Treat any unsupported addition or lost claim as an error.
-4. Write the final version. State each point naturally instead of patching one flagged phrase at a time. If a sentence stays awkward, rewrite the paragraph around its main point. Apply the dash rule in §14.
+1. 원문을 읽고 AI 패턴을 표시한다.
+2. 초안을 쓴다. 소리 내어 읽는다. 호흡, 구체, `이다`/`있다`, 종결어미, 격식을 본다.
+3. 두 가지를 묻는다.
+   - **"아직 AI처럼 들리는가?"**
+   - **"사실, 이름, 숫자, 날짜, 인용, 출처, 순위, 주장을 더하거나 빼었는가?"**
+   원문에 없는 추가나 사라진 주장은 오류다.
+4. 최종본을 쓴다. 표시된 구절만 때우지 말고, 각 점을 자연스러운 문장으로 다시 말한다. 한 문장이 계속 어색하면 그 문단을 요점 중심으로 다시 쓴다. 14절 줄표·쉼표 규칙을 마지막에 적용한다.
 
-Return the result required by [How to return the result](#how-to-return-the-result).
+[결과 내는 법](#결과-내는-법)이 요구하는 형식으로 돌려준다.
 
-## Source
+## 소설 모드
 
-This skill is based on [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. Its patterns come from reviews of AI-generated text on Wikipedia.
+사용자가 글이 소설, 시, 희곡, 문예 에세이라고 하거나, 문예 창작으로 고쳐 달라고 할 때만 이 절을 연다. 기본값은 문서 문체다. 기술 문서, PR, 커밋, 공지에 작법 규칙을 넣지 않는다.
 
-Wikipedia's main point: "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
+소설 모드에서도 줄거리 사실을 보태지 않는다. 원문에 없는 장면, 인물, 동기를 만들지 않는다.
+
+이 모드에서는 국립국어원 공공문 순화를 강제하지 않는다. `그녀`, 한자어, 긴 수식, 감각 묘사, 고른 호흡을 깨는 반복은 장르 장치일 수 있다. 번역투와 챗봇 잔여, 광고 문장, 없는 반론만 걷는다. 보여주기·시점·상징을 가르치려 하지 않는다. 이미 있는 목소리를 지우지 않는 것이 일이다.
+
+## 출처
+
+- 교차 언어 챗봇·서식 패턴: [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)
+- 번역투: 이근희, 「영한 번역시 발생하는 번역투에 대한 고찰」; 국립국어원 『쉬운 공문서 쓰기 길잡이』, 신문 언어 지침
+- 한국어 LLM 관찰: Park et al., [KatFishNet](https://aclanthology.org/2025.acl-long.1030.pdf) (ACL 2025); Park & Han, LREAD (2026)
+- 관행 문장론은 밀도 참고만 한다. 이오덕 『우리글 바로쓰기』의 순화 처방을 전 장르에 강제하지 않는다.
+
+위키의 요지: "LLM은 다음에 올 말을 통계로 고른다. 결과는 가장 흔한 쪽으로, 가장 많은 경우에 맞게 기울어진다."

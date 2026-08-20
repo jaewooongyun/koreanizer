@@ -1,183 +1,148 @@
-# Humanizer
+# Koreanizer
 
-[![skills.sh installs](https://skills.sh/b/blader/humanizer)](https://skills.sh/blader/humanizer)
+Koreanizer는 AI처럼 읽히는 한국어를 사람 글로 다시 쓴다. 뜻은 바꾸지 않는다. Markdown 스킬이라, 스킬을 읽는 에이전트면 쓸 수 있다.
 
-Humanizer rewrites AI-sounding text so it reads like a person wrote it, without changing what it says. Because it is just Markdown, it works with any agent that supports skills.
+Humanizer 2.11.2의 제품 골격(사실 금지, 샘플 우선, 세 출력 모드, 오탐 절)을 유지한다. 영어 문법 조항은 번역투, 종결어미, 연결어미 뒤 쉼표로 바꿨다.
 
-## How it works
+## 동작
 
-Humanizer uses 35 patterns from Wikipedia's ["Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. It makes a first pass without treating the original structure as fixed. Then it checks the draft against those patterns and the original claims before rewriting whatever still needs work.
+번호 패턴 35개를 기준으로 초안을 쓴 뒤, 그 초안을 다시 대조한다. 교차 언어 챗봇·서식 버릇은 Wikipedia의 ["Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)을 따른다. 한국어 문법 버릇은 번역투 연구, 국립국어원 문장 지침, 한국어 LLM 관찰을 따른다.
 
-> "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
+없는 사실을 만들지 않는다. 이름, 숫자, 날짜, 인용, 출처는 원문이나 필자에게서만 온다. 기술·레퍼런스는 담담하게 둔다. 샘플을 주면 기본 문체 규칙보다 샘플을 따른다. 소설, 시, 문예 에세이라고 하면 작법 순화를 강제하지 않고, 번역투와 챗봇 잔여만 걷는다.
 
-It does not make things up. A name, number, date, quote, citation, or other factual detail must come from the source or the writer. For personal writing, Humanizer keeps the writer's style. Technical and reference prose stays neutral and plain. If you provide a writing sample, Humanizer follows that sample instead of its default style rules.
+텍스트를 붙여 넣으면 초안과 남은 패턴을 보여 준 뒤 최종본을 준다. 파일을 지정하면 산문만 고치고, 코드, 데이터, 프론트매터, 링크 대상은 그대로 둔다.
 
-When you paste text, Humanizer shows its work before giving you the final version. You see the first rewrite and a short critique of anything that still sounds artificial. Point it at a file and it changes only the prose, leaving code, data, frontmatter, and link targets alone.
+## 사용
 
-## Usage
-
-Call the skill directly:
+스킬을 직접 부른다.
 
 ```
-/humanizer
+/koreanizer
 
-[paste your text here]
+[고칠 글을 붙여 넣는다]
 ```
 
-Or ask in plain language:
+평문으로 요청해도 된다.
 
 ```
-Please humanize this text: [your text]
+이 글의 AI 티를 걷어 줘: [글]
 ```
 
-To rewrite a file, give Humanizer its path:
+파일을 고치려면 경로를 준다.
 
 ```
-Humanize the prose in docs/launch-post.md
+docs/launch-post.md 산문을 koreanize해 줘
 ```
 
-### Match your voice
+### 목소리 맞추기
 
-If you want the rewrite to sound more like you, include a sample:
+자신의 글을 샘플로 붙인다.
 
 ```
-/humanizer
+/koreanizer
 
-Here's a sample of my writing for voice matching:
-[paste 2-3 paragraphs of your own writing]
+내 문체 샘플:
+[본인 글 두세 문단]
 
-Now humanize this text:
-[paste AI text to humanize]
+이제 이 글을 고쳐 줘:
+[AI 글]
 ```
 
-Humanizer follows the sample's rhythm, word choice, punctuation, and deliberate quirks.
+샘플의 호흡, 단어, 종결어미, 해요체/합니다체, 고의로 남긴 버릇을 따른다.
 
-## The 35 patterns
+## 35개 패턴
 
-### Content patterns
+### 내용
 
-| # | Pattern | Before | After |
+| # | 패턴 | 전 | 후 |
 |---|---------|--------|-------|
-| 1 | **Inflated importance and legacy** | "marking a pivotal moment in the evolution of..." | "was established in 1989 as part of a wider decentralization" |
-| 2 | **Name-dropping to prove importance** | "cited in NYT, BBC, FT, and The Hindu" | Keep only useful, sourced context |
-| 3 | **Shallow -ing analysis** | "symbolizing... reflecting... showcasing..." | Keep only what the source supports |
-| 4 | **Sales language** | "nestled within the breathtaking region" | "is a town in the Gonder region" |
-| 5 | **Vague sources** | "Experts believe it plays a crucial role" | Name a real source or remove the claim |
-| 6 | **Formulaic challenges and outlook** | "Despite challenges... continues to thrive" | Keep the facts and remove the sales pitch |
+| 1 | **중요성·유산 과장** | "지역 통계의 이정표를 세웠다" | "1989년에 문을 열었다" |
+| 2 | **매체 나열** | "조선일보, BBC, 한겨레, FT에 인용" | 맥락 있는 출처만 남긴다 |
+| 3 | **번역체 연결 분석** | "칠해져 있으며, 유대를 보여 준다" | 원문이 받치는 것만 남긴다 |
+| 4 | **광고 문장** | "수려한 자연 한가운데 자리 잡은" | "산골에 있고, 오래된 집이 있다" |
+| 5 | **막연한 출처** | "전문가들은 핵심적인 역할을" | 이름을 밝히거나 주장을 뺀다 |
+| 6 | **도전과 전망 단락** | "도전에도 지속적인 성장을" | 사실만 남긴다 |
 
-### Language and grammar patterns
+### 언어와 문법
 
-| # | Pattern | Before | After |
+| # | 패턴 | 전 | 후 |
 |---|---------|--------|-------|
-| 7 | **Overused AI words** | "Actually... additionally... gated on... quietly... testament... landscape... showcasing" | "also... needs... remain common" |
-| 8 | **Avoiding is and are** | "serves as... features... boasts" | "is... has" |
-| 9 | **Not X but Y and clipped endings** | "It's not just X, it's Y", "..., no guessing" | State the point directly |
-| 10 | **Forced groups of three** | "innovation, inspiration, and insights" | Use the number of items the meaning needs |
-| 11 | **Changing names and repeated openings** | "protagonist... main character... hero" or "She noted... She noted... She filed..." | Use one name or merge the repeated sentences |
-| 12 | **False from X to Y ranges** | "from the Big Bang to dark matter" | List the topics directly |
-| 13 | **Passive voice and missing subjects** | "No configuration file needed" | Name the actor when that helps |
+| 7 | **과잉 AI 어휘** | "종합적으로... 시사하는 바가 크다" | 영향이 있는 대상을 밝힌다 |
+| 8 | **이다/있다 회피** | "역할을 수행하며 3천 제곱미터를 가지고 있다" | "전시실이다. 넓이는 3천 제곱미터다" |
+| 9 | **단순한 X가 아니라 Y** | "단순한 도구가 아니라 언어다" | 점을 바로 말한다 |
+| 10 | **억지 셋** | "혁신, 영감, 산업 통찰" | 뜻에 필요한 개수만 쓴다 |
+| 11 | **이름 순환·문두·종결 반복** | "주인공... 중심인물... 영웅" / "됩니다. 됩니다." | 이름 하나, 종결을 섞는다. 빠진 주어는 채우지 않는다 |
+| 12 | **가짜 X부터 Y까지** | "빅뱅에서 암흑물질에 이르기까지" | 주제를 나열한다 |
+| 13 | **번역투 피동** | "팀에 의해 작성되어지며 조율이 이루어졌다" | "팀이 썼고, 내부에서 조율했다" |
 
-### Style patterns
+### 문체
 
-| # | Pattern | Before | After |
+| # | 패턴 | 전 | 후 |
 |---|---------|--------|-------|
-| 14 | **Em/en dashes** | "institutions—not the people—yet this continues—" | Cut them: periods, commas, colons, or parentheses |
-| 15 | **Too much bold text** | "**OKRs**, **KPIs**, **BMC**" | "OKRs, KPIs, BMC" |
-| 16 | **Lists with bold mini-headings** | "**Performance:** Performance improved" | Use prose when a list adds no value |
-| 17 | **Title case in headings** | "Strategic Negotiations And Partnerships" | "Strategic negotiations and partnerships" |
-| 18 | **Emojis** | "🚀 Launch Phase: 💡 Key Insight:" | Remove emojis |
-| 19 | **Curly quotes** | `said “the project”` | `said "the project"` |
-| 26 | **Too many hyphenated word pairs** | “cross-functional, data-driven, client-facing” | Keep only the hyphens grammar needs |
-| 27 | **A fake deeper truth** | "At its core, what matters is..." | State the point directly |
-| 28 | **Announcing the next point** | "Let's dive in", or "one thing that bit me" | Start with the content |
-| 29 | **A heading repeated below itself** | "## Performance" + "Speed matters." | Let the heading do the work |
-| 30 | **Writing about the old version** | "This function was added to replace..." | Describe what it does now |
-| 31 | **Forced punchlines and fragments** | "It had no preference. No prior. No nostalgia." | Use natural sentence lengths and specific claims |
-| 32 | **Formulaic sayings** | "Symmetry is the language of trust" | State the specific claim |
-| 33 | **Fake-candid openings** | "Honestly? It depends..." | State the answer directly |
-| 34 | **Answering objections no one raised** | "This isn't mainly about prompt length..." | Remove the unsupported defense and keep any real claim |
-| 35 | **Rejecting fake alternatives** | "A tempting option would be to..., but" | Remove the fake option and keep real choices |
+| 14 | **줄표·연결어미 뒤 쉼표** | "밀고 있다—주민들은" / "정리하며," | 쉼표나 연결로 바꾼다 |
+| 15 | **과잉 볼드** | "**OKR**, **KPI**" | "OKR, KPI" |
+| 16 | **볼드 소제목 목록** | "**성능:** 성능이 개선" | 목록이 필요 없으면 산문 |
+| 17 | **명사형 제목·Title Case** | "핵심 성과 및 향후 계획" | "지금까지의 성과와 다음에 할 일" |
+| 18 | **장식 이모지** | "🚀 출시: 💡 핵심:" | 이모지를 뺀다 |
+| 19 | **따옴표 남용** | "애자일"한 "여정" | 평범한 단어에서 따옴표를 뺀다. 「」는 남긴다 |
+| 26 | **한자어 명사화·영어 차용어** | "데이터 드리븐 의사결정... 고도화" | 자리 잡은 용어만 남긴다 |
+| 27 | **가짜 심층** | "본질적으로 핵심은" | 점을 바로 말한다 |
+| 28 | **다음 내용 예고** | "자, 이제 살펴보자" | 내용부터 시작한다 |
+| 29 | **제목 반복** | "## 성능" + "속도는 중요하다" | 제목이 일하게 둔다 |
+| 30 | **이전 버전 서술** | "이전 방식을 대체하기 위해" | 지금 동작을 말한다 |
+| 31 | **억지 짧은 문장** | "왔다. 선호하지 않았다. 없었다." | 호흡을 섞고 주장을 구체적으로 |
+| 32 | **공식 격언** | "대칭은 신뢰의 언어다" | 구체적 주장을 쓴다 |
+| 33 | **가짜 솔직 도입** | "솔직히? 얼마나 쓰느냐에" | 답부터 말한다 |
+| 34 | **없는 반론** | "오해하지 마세요, ~이 아닙니다" | 방어를 빼고 실제 주장만 |
+| 35 | **가짜 대안 기각** | "유혹적인 방법은... 하지만" | 가짜 안을 빼고 실제 선택만 |
 
-### Chatbot patterns
+### 챗봇
 
-| # | Pattern | Before | After |
+| # | 패턴 | 전 | 후 |
 |---|---------|--------|-------|
-| 20 | **Chatbot text left in the answer** | "I hope this helps! Let me know if..." | Remove it |
-| 21 | **Knowledge-limit disclaimers and guesses** | "While details are limited in available sources..." | State what is known or remove the claim |
-| 22 | **Overly agreeable tone** | "Great question! You're absolutely right!" | Answer directly |
+| 20 | **챗봇 잔여 문구** | "도움이 되셨으면 합니다!" | 뺀다 |
+| 21 | **지식 한계 면책·추측** | "자료가 제한적이지만 ~로 보인다" | 아는 것만 쓰거나 뺀다 |
+| 22 | **과잉 동의** | "좋은 질문입니다! 완전히 맞습니다" | 바로 답한다 |
 
-### Filler and hedging
+### 군더더기
 
-| # | Pattern | Before | After |
+| # | 패턴 | 전 | 후 |
 |---|---------|--------|-------|
-| 23 | **Filler phrases** | "In order to", "Due to the fact that" | "To", "Because" |
-| 24 | **Too many qualifiers** | "could potentially possibly" | "may" |
-| 25 | **Generic positive endings** | "The future looks bright" | End with a fact or a sourced plan |
+| 23 | **번역투 구** | "에 대하여", "를 통해", "에 있어서" | "을", "로", "에서" |
+| 24 | **수식어 중첩** | "가능성이 있어 보인다" | "줄 수 있다" |
+| 25 | **막연한 낙관 결말** | "앞으로의 행보가 기대된다" | 마지막 사실에서 끝낸다 |
 
-## Full example
+## 긴 예
 
-*Details such as the month and neighborhood need to come from the writer. If they are missing, Humanizer should ask instead of making them up.*
+*달, 동네처럼 원문에 없는 세부는 필자에게 묻는다. 없으면 만들지 않는다.*
 
-**Before (AI-sounding):**
-> I recently spent five unforgettable days in Lisbon, and let me tell you — this city completely stole my heart. From the moment I arrived, I knew I was somewhere truly special.
+**전 (AI 문장):**
+> 지난주 부산에서 보낸 닷새는 잊지 못할 여정이었습니다. 도착하는 순간, 이곳이 얼마나 특별한 도시인지 깨달았습니다.
 >
-> Nestled along the banks of the Tagus River, Lisbon stands as a vibrant testament to Portugal's enduring spirit, where rich history and modern energy intertwine at every turn. Yes, the famous hills are challenging — my legs certainly felt it! — but every climb rewards you with breathtaking, panoramic views that make it all worthwhile.
+> 해운대의 심장부에 자리 잡은 호텔은 혁신적인 서비스와 풍부한 해양 문화를 자랑합니다. 언덕은 힘들었지만, 그 끝에서 펼쳐지는 전망은 모든 수고를 보상해 주었습니다.
 >
-> No trip would be complete without riding the iconic Tram 28, winding through the city's most historic neighborhoods. And the food? Simply divine. The original pastéis de nata at Pastéis de Belém are a beloved national treasure, and savoring one still warm was a moment I will never forget.
->
-> But what truly makes Lisbon special isn't just the sights — it's the feeling. Wander a few steps off the main squares and you'll discover a quieter, more authentic side: sun-drenched alleys, charming tiled facades, and friendly locals going about their daily lives, inviting you to slow down and savor every moment.
->
-> Of course, the must-see São Jorge Castle offers stunning views over the rooftops below. The queues can be long, but the experience is absolutely worth it for any history buff or curious traveler.
->
-> Would I go back? Absolutely. Lisbon isn't just a place to visit — it's a place to fall in love with, again and again. If you're dreaming of your next getaway, this is one destination that promises memories to last a lifetime. ✨
+> 물론 광안대교 야경은 필수 코스입니다. 전문가들도 부산의 상징이라고 말합니다. 도움이 되셨으면 합니다!
 
-**After:**
-> I spent five days in Lisbon last October and still have mixed feelings about it. Beautiful, yes. Also harder on the knees than anyone warned me.
+**후:**
+> 지난주 부산에서 닷새를 보냈다. 해운대 호텔에 묵었고, 언덕을 오르느라 힘들었지만 위에서 본 전망은 좋았다.
 >
-> The hills are the whole story and somehow never make the brochures. My hotel was up in Alfama, which photographs beautifully and translates, in practice, to climbing what felt like a six-story staircase every time I wanted coffee. By the second day my calves had opinions. I started planning each walk around which way was downhill, which is a strange way to see a city but probably an honest one.
->
-> Everyone says to ride Tram 28, so I did, wedged against a stranger's backpack for forty minutes while three tour groups filmed the same corner. I would walk the route next time, or go before breakfast. The custard tarts, though, earn the fuss. I had one at a plain little place in Graça, still warm, and for about thirty seconds I understood why people build trips around pastry.
->
-> What I did not expect was how quiet the city gets away from the main squares. Two blocks uphill from any plaza it turns into laundry lines, chipped tile, open windows, and old men watching football with the sound turned up. That is the Lisbon I keep thinking about, not the castle.
->
-> The castle is fine. The view is great, the queue is long, and I spent more time shuffling toward the entrance than looking at anything once I got inside. If I had only two days, I would trade it for an afternoon of getting lost.
->
-> I would go back, but in spring and with better shoes. Lisbon does not bend over backward to make things easy for you. I think I liked that, even when my legs disagreed.
+> 광안대교 밤 풍경은 많이들 가라고 해서 갔다.
 
-## Sources
+## 출처
 
-- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) is the source for the pattern list.
-- [WikiProject AI Cleanup](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup) maintains the page.
+- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing). 교차 언어 챗봇·서식 패턴
+- 이근희, 「영한 번역시 발생하는 번역투에 대한 고찰」; 국립국어원 『쉬운 공문서 쓰기 길잡이』
+- Park et al., [KatFishNet](https://aclanthology.org/2025.acl-long.1030.pdf) (ACL 2025); Park & Han, LREAD (2026)
+- 이오덕 『우리글 바로쓰기』는 밀도 참고만 한다. 전 장르 순화 처방으로 쓰지 않는다.
 
-## Version history
+이 저장소는 [Humanizer](https://github.com/blader/humanizer)의 포크다. 제품 계약은 가져왔고, 한국어 문법 규칙은 다시 썼다.
+
+## 버전
 
 <details>
-<summary>Show release notes</summary>
+<summary>릴리스 노트</summary>
 
-- **2.11.2** - Removed the plugin symlink and separate Claude Desktop package. Current Claude Code loads the root `SKILL.md` directly, so GitHub's source ZIP now works in Claude Desktop. No change to the 35 patterns.
-- **2.11.1** - Added a Claude Desktop-ready release package with one regular `humanizer/SKILL.md` file. GitHub's source archive still keeps the plugin symlink (fixes #224). No change to the 35 patterns.
-- **2.11.0** - Rewrote all repo guidance, descriptions, checks, and skill instructions in Plain Language. Kept all 35 patterns and their behavior.
-- **2.10.2** - Added the standard `skills/humanizer/` plugin path for Claude Desktop and older loaders. The path links to the root skill, so there is still one prompt (fixes #202).
-- **2.10.1** - Added figurative uses of `gate`, `gated`, and `gating` to §7. Kept real technical uses, such as feature gating and CI quality gates.
-- **2.10.0** - Added patterns #34 and #35 for old drafting ideas left in final text. Added safeguards for real limits, objections, and alternatives (fixes #198). Also improved §24 and the final rewrite step. 35 patterns total.
-- **2.9.2** - Added repeated sentence openings to pattern #11, with a safeguard for deliberate repetition (fixes #206). Expanded §28 to cover casual announcements. 33 patterns total.
-- **2.9.1** - Improved installation and package checks. Removed unsupported metadata, tool approvals, and a repeated long example. 33 patterns total.
-- **2.9.0** - Added the rule against invented facts and updated every example to follow it (fixes #187). Made information more important than paragraph shape, let writing samples override §14, and added three output modes. 33 patterns total.
-- **2.8.3** - Moved the version to `metadata.version` for Agent Skills compatibility. 33 patterns total.
-- **2.8.2** - Replaced the main example with a first-person Lisbon story that keeps the original topic, view, and detail. 33 patterns total.
-- **2.8.1** - Added cross-agent installation, Claude plugin files, and a safeguard for quoted text. 33 patterns total.
-- **2.8.0** - Added patterns #31-33 and expanded pattern #20 to catch chatbot offers. 33 patterns total.
-- **2.7.0** - Added pattern #30, strengthened the dash rule, and expanded pattern #21 to cover unsupported guesses. 30 patterns total.
-- **2.6.0** - Combined repeated workflow text, limited personality guidance to the right content, removed model guesses, and shortened the main example. 29 patterns total.
-- **2.5.1** - Added passive voice and missing subjects. 29 patterns total.
-- **2.5.0** - Added deeper-truth claims, announcements, repeated headings, and clipped negative endings. Tightened the dash rule and corrected the frontmatter. 28 patterns total.
-- **2.4.0** - Added writing-sample matching.
-- **2.3.0** - Added hyphenated word pairs.
-- **2.2.0** - Added a draft check and second rewrite.
-- **2.1.1** - Corrected the curly-quote example.
-- **2.1.0** - Added before/after examples for all 24 patterns.
-- **2.0.0** - Rewrote the skill from the Wikipedia source.
-- **1.0.0** - First release.
+- **1.0.0** - Humanizer 2.11.2 골격을 유지한 한국어 스킬. 영어 전용 조항(-ing, Title Case, is/are, 주어 누락, 하이픈)을 번역투·종결어미·쉼표 규칙으로 교체. 소설 모드를 추가. 패키지 이름을 koreanizer로 변경.
 
 </details>
 
@@ -185,25 +150,25 @@ Humanizer follows the sample's rhythm, word choice, punctuation, and deliberate 
 
 MIT
 
-## Installation
+## 설치
 
-Install Humanizer with the Skills CLI:
+Skills CLI:
 
 ```bash
-npx skills add blader/humanizer --global
+npx skills add sangeuiseo/koreanizer --global
 ```
 
-Leave off `--global` to install Humanizer only in the current project. Add `--agent <name>` or `--agent '*'` to choose which agents receive it, then reload their skills.
+`--global`을 빼면 현재 프로젝트에만 설치한다. `--agent <name>` 또는 `--agent '*'`로 에이전트를 고른 뒤, 스킬을 다시 불러온다.
 
-Claude Code 2.1.142 or newer can install the plugin instead:
+Claude Code 2.1.142 이상은 플러그인으로 설치할 수 있다.
 
 ```text
-/plugin marketplace add blader/humanizer
-/plugin install humanizer@humanizer
+/plugin marketplace add sangeuiseo/koreanizer
+/plugin install koreanizer@koreanizer
 ```
 
-The plugin command is `/humanizer:humanizer`.
+플러그인 명령은 `/koreanizer:koreanizer`다.
 
-In Claude Desktop, download this repository as a ZIP and upload it as a skill.
+Claude Desktop에서는 이 저장소를 ZIP으로 받아 스킬로 올린다.
 
-For a manual install, copy `SKILL.md` into the agent's skill folder.
+손으로 설치하면 `SKILL.md`를 에이전트 스킬 폴더에 복사한다.

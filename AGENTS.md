@@ -1,10 +1,10 @@
 # Guide for agents
 
-This file explains how to change Humanizer without breaking its package or prompt.
+This file explains how to change Koreanizer without breaking its package or prompt.
 
 ## What this repo contains
 
-Humanizer is an agent skill written in Markdown. `SKILL.md` is the prompt that agents read. The repo has no build step.
+Koreanizer is an agent skill written in Markdown. `SKILL.md` is the prompt that agents read. The repo has no build step.
 
 Keep the skill portable. Do not write instructions that limit it to one or two agent tools.
 
@@ -42,8 +42,11 @@ Use Plain Language in code comments, prompts, documentation, descriptions, valid
 - Keep exact identifiers, commands, paths, schema fields, quotations, watched phrases, and behavior-bearing examples.
 - Keep the full technical meaning.
 
+Koreanizer's prompt is in Korean. When you edit `SKILL.md`, write the prompt in Korean. Keep identifiers, commands, paths, and pattern numbers exact. Do not translate watched phrases into English.
+
 ## Editing the skill
 
 - Keep the YAML metadata valid.
 - Treat the prompt below the metadata as the product.
 - Prefer a short, clear instruction over another exception or repeated explanation.
+- Keep the product contract: do not invent facts, match the writer's sample, and apply fiction craft only in fiction mode.
