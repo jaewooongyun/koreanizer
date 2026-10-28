@@ -9,7 +9,7 @@ description: |
   AI 티, 자연스러운 한국어, humanize, koreanize.
 license: MIT
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Koreanizer: AI 한국어 문장을 사람 글로 고친다
@@ -575,7 +575,8 @@ PR 설명과 커밋 메시지는 무엇을 왜 바꿨는지가 본문이다. 바
 
 - 교차 언어 챗봇·서식 패턴: [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)
 - 번역투: 이근희, 「영한 번역시 발생하는 번역투에 대한 고찰」; 국립국어원 『쉬운 공문서 쓰기 길잡이』, 신문 언어 지침
-- 한국어 LLM 관찰: Park et al., [KatFishNet](https://aclanthology.org/2025.acl-long.1030.pdf) (ACL 2025); Park & Han, LREAD (2026)
+- 문장 부호: 국립국어원 『문장 부호 해설』(2014) 제4항 쉼표
+- 한국어 LLM 관찰: Park et al., [KatFishNet](https://aclanthology.org/2025.acl-long.1030.pdf) (ACL 2025); Park & Han, LREAD (2026); Lee, [An LLM-Associated Register Shift in Korean Journal Abstracts](https://arxiv.org/abs/2609.07447) (2026, working paper)
 - 관행 문장론은 밀도 참고만 한다. 이오덕 『우리글 바로쓰기』의 순화 처방을 전 장르에 강제하지 않는다.
 
 위키의 요지: "LLM은 다음에 올 말을 통계로 고른다. 결과는 가장 흔한 쪽으로, 가장 많은 경우에 맞게 기울어진다."

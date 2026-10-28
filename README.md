@@ -141,7 +141,8 @@ docs/launch-post.md 산문을 koreanize해 줘
 
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing). 교차 언어 챗봇·서식 패턴
 - 이근희, 「영한 번역시 발생하는 번역투에 대한 고찰」; 국립국어원 『쉬운 공문서 쓰기 길잡이』
-- Park et al., [KatFishNet](https://aclanthology.org/2025.acl-long.1030.pdf) (ACL 2025); Park & Han, LREAD (2026)
+- 국립국어원 『문장 부호 해설』(2014) 제4항 쉼표
+- Park et al., [KatFishNet](https://aclanthology.org/2025.acl-long.1030.pdf) (ACL 2025); Park & Han, LREAD (2026); Lee, [An LLM-Associated Register Shift in Korean Journal Abstracts](https://arxiv.org/abs/2609.07447) (2026, working paper)
 - 이오덕 『우리글 바로쓰기』는 밀도 참고만 한다. 전 장르 순화 처방으로 쓰지 않는다.
 
 이 저장소는 [Humanizer](https://github.com/blader/humanizer)의 포크다. 제품 계약은 가져왔고, 한국어 문법 규칙은 다시 썼다.
@@ -151,6 +152,7 @@ docs/launch-post.md 산문을 koreanize해 줘
 <details>
 <summary>릴리스 노트</summary>
 
+- **1.4.0** - 14절이 연결어미와 문두 접속 부사 뒤 쉼표를 기본으로 지우고 돌려주기 전에 다시 본다. 나열, 순서 어구, 대답, 삽입구의 쉼표는 범위 밖이다. "후" 예시와 지시 본문이 그 쉼표를 쓰지 않게 고쳤고 검증기가 "후" 예시의 재발을 막는다. 16절이 일반 산문에서도 관계를 감춘 기호를 본다. 오탐 목록에 번역투 표지와 괄호·긴 문장을 더하고 23절의 `~를 통해` 예시를 뺐다.
 - **1.3.0** - 영어 문서를 옮길 때 나오는 번역투를 다루는 절을 넣었다. 무생물 주어, 복수 표지 `-들`, `당신`, 형식 주어 구문, 앞으로 쌓은 관계절, 지시어 남발, `-의` 연쇄, 현재완료 직역, 전치사를 받는 명사구를 본다. 기술 문서 모드는 PR 설명, 커밋 메시지, 코드 주석까지 받는다.
 - **1.2.0** - 35절보다 앞서는 일반 규칙 두 개를 두었다. 이미 자연스러운 구절은 손대지 않고, 목록에 없어도 같은 버릇이면 고친다. 다시 쓰기는 아직 어색한 구절만 고친다.
 - **1.1.0** - 7절을 상투 어휘만이 아니라 그 자리에 안 맞는 말(희귀어, 억지 비유, 어색한 수분류)까지 보게 했다. 다시 쓰기 과정에서 흔한 말인지를 묻는다.
